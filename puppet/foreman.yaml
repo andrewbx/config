@@ -1,0 +1,12 @@
+---
+:url: "https://deb-svr.local.com"
+:ssl_ca: "/var/lib/puppet/ssl/certs/ca.pem"
+:ssl_cert: "/var/lib/puppet/ssl/certs/deb-svr.local.com.pem"
+:ssl_key: "/var/lib/puppet/ssl/private_keys/deb-svr.local.com.pem"
+:user: ""
+:password: ""
+:puppetdir: "/var/lib/puppet"
+:puppetuser: "puppet"
+:facts: true
+:timeout: 10
+:threads: null
