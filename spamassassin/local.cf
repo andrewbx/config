@@ -1,0 +1,118 @@
+# SpamAssassin /etc/mail/spamassassin/local.cf
+
+required_hits 5.0
+#rewrite_subject 0
+report_safe 0
+skip_rbl_checks 0
+rbl_timeout 3
+#num_check_received 3
+trusted_networks 192.168/16 172.16/16
+use_bayes 1
+#auto_learn 1
+#use_terse_report 0
+use_razor2 1
+razor_config /etc/razor/razor-agent.conf
+razor_timeout 5
+use_dcc 1
+use_pyzor 0
+pyzor_path /usr/bin/pyzor
+pyzor_timeout 5
+dns_available yes
+ok_locales en ok_languages en
+#check_mx_attempts 1
+lock_method flock
+
+#use_auto_whitelist 0
+#auto_whitelist_path /var/spool/mail/.spamassassin/auto-whitelist
+#bayes_path /var/spool/mail/.spamassassin/bayes
+
+score DCC_CHECK 3.0
+score RCVD_IN_BL_SPAMCOP_NET 2.5
+score PYZOR_CHECK 2.500
+score RAZOR2_CHECK 2.094
+score RAZOR2_CF_RANGE_51_100 2.202
+score RCVD_IN_SORBS_HTTP 2.202
+score RCVD_IN_SORBS_MISC 2.408
+score BAYES_99 4.300
+score BAYES_95 3.500
+score BAYES_80 3.000
+score SUBJ_ALL_CAPS 0.8
+score NO_DNS_FOR_FROM 2.0
+score MISSING_MIMEOLE 1.6
+score MAILTO_SUBJ_REMOVE 1.5
+score WHY_PAY_MORE 2.8
+score BANG_MORE 1.5
+score EMPTY_MESSAGE 5.0
+score MISSING_SUBJECT 1.5
+blacklist_from *@163.com
+blacklist_from *@163.net
+blacklist_from *@3fec.com
+blacklist_from *@4urop.com
+blacklist_from *@bluelightoffers.com
+blacklist_from *@bonanzaoffers.com
+blacklist_from *@deal-seeker.com
+blacklist_from *@dealpatrol.com
+blacklist_from *@direct.email-publisher.com
+blacklist_from *@discountcertificates.com
+blacklist_from *@drm.email-publisher.com
+blacklist_from *@e-mailpromo.com
+blacklist_from *@fantastic-bargain.com
+blacklist_from *@fantasy-mail.com
+blacklist_from *@free2sample.com
+blacklist_from *@gr8dls.com
+blacklist_from *@greatdealsdepot.net
+blacklist_from *@hi-speedemail.com
+blacklist_from *@hi-speedmediaoffers.net
+blacklist_from *@hi-speedoffers.net
+blacklist_from *@hispeedmediaoffers.com
+blacklist_from *@hispeedoffers.net
+blacklist_from *@hsm-mailerdirect.com
+blacklist_from *@hsmediadirect.com
+blacklist_from *@hsmoffers.net
+blacklist_from *@hsmspecials.net
+blacklist_from *@itsremarkable.com
+blacklist_from *@ixpweb.com
+blacklist_from *@j4un.com
+blacklist_from *@j4yn.com
+blacklist_from *@jfyn.com
+blacklist_from *@jumpjive.com
+blacklist_from *@justforyou-mail.com
+blacklist_from *@justforyounewsletter.email-publisher.com
+blacklist_from *@lessthanyouthought.com
+blacklist_from *@lifesaversdirect.com
+blacklist_from *@lotto-mail.com
+blacklist_from *@mail.krazykash.com
+blacklist_from *@marinedigital.com
+blacklist_from *@mxdat.com
+blacklist_from *@mydailyoffers.com
+blacklist_from *@mypremiumoffers.com
+blacklist_from *@netadoffers.com
+blacklist_from *@offertoday.com
+blacklist_from *@optin-offers.net
+blacklist_from *@save99.com
+blacklist_from *@savingshaus.com
+blacklist_from *@sendgreatoffers.com
+blacklist_from *@somer.ew01.com
+blacklist_from *@speedyvalues.com
+blacklist_from sde@spledee.com
+blacklist_from *@super-bargains.net
+blacklist_from *@timesaversdirect2u.com
+blacklist_from *@top-brands.net
+blacklist_from *@vendeeamerica.com
+blacklist_from *@yourmailsource.com
+blacklist_from *@zaushon.com
+blacklist_from *@mail.internetseer.com
+blacklist_from *@ineedhits.com
+blacklist_from *@sesmail.com
+blacklist_from *@happpymail.com
+blacklist_from *@rickymail.com
+blacklist_from *@sammimail.com
+blacklist_from *@uymail.com
+blacklist_from *@wartaponsel.com
+blacklist_from *@kellychen.com
+blacklist_from *@cfl1.com
+blacklist_from *@emailizer.com
+blacklist_from *@mail.ru
+blacklist_from *@cyberemail.com
+blacklist_from *@*.zzn.com
+rewrite_header subject ***SPAM*** 
