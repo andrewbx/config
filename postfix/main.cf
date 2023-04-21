@@ -1,0 +1,64 @@
+# /etc/postfix/main.cf
+
+# System Settings.
+
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+home_mailbox = .maildir/
+virtual_maps = hash:/etc/postfix/virtusertable
+canonical_maps = hash:/etc/postfix/canonical
+mydestination = /etc/postfix/localhost.dest
+sender_canonical_maps = hash:/etc/postfix/sender_canonical
+recipient_canonical_maps = hash:/etc/postfix/recipient_canonical
+mail_spool_directory = /var/spool/mail
+append_dot_mydomain = no
+recipient_delimiter = +
+mynetworks = 127.0.0.0/8
+myorigin = $myhostname
+myhostname = mail.lin-cluster.co.uk
+mailbox_command = procmail -a "$EXTENSION"
+
+# SMTP Checks + RBL.
+
+smtpd_recipient_restrictions =
+
+		   reject_invalid_hostname,
+		   reject_non_fqdn_hostname,
+		   reject_non_fqdn_sender,
+		   reject_non_fqdn_recipient,
+		   reject_unknown_sender_domain,
+		   reject_unknown_recipient_domain,
+		   reject_unauth_pipelining,
+		   permit_sasl_authenticated
+		   permit_mynetworks,
+		   reject_unauth_destination,
+
+		   reject_rbl_client bl.spamcop.net,
+                   reject_rbl_client dnsbl.njabl.org,
+                   reject_rbl_client zen.spamhaus.org,
+                   reject_rbl_client http.dnsbl.sorbs.net,
+                   reject_rbl_client socks.dnsbl.sorbs.net,
+                   reject_rbl_client web.dnsbl.sorbs.net,
+                   reject_rbl_client misc.dnsbl.sorbs.net,
+                   reject_rbl_client zombie.dnsbl.sorbs.net,
+                   reject_rbl_client black.uribl.com,
+                   reject_rbl_client rhsbl.sorbs.net,
+                   reject_rbl_client list.dsbl.org,
+
+		   permit
+
+# SASL.
+
+smtpd_tls_auth_only = no
+smtp_use_tls = yes
+smtpd_use_tls = yes
+smtpd_sasl_auth_enable = yes
+broken_sasl_auth_clients = yes
+smtp_tls_note_starttls_offer = yes
+smtpd_tls_key_file = /etc/postfix/hostkey.pem
+smtpd_tls_cert_file = /etc/postfix/hostcert.pem
+smtpd_tls_CAfile = /etc/postfix/cacert.pem
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
