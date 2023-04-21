@@ -1,0 +1,20 @@
+# Exim filter
+
+if not first_delivery
+then
+  finish
+endif
+
+if ${length_80:$header_date:} is not $header_date:
+then
+  fail text "This message has been rejected because it has\n\
+	     an overlength date field which can be used to\n\
+	     subvert Microsoft mail programs.\n\
+             The following URL has further information:\n\
+	     http://www.securityfocus.com/frames/?content=/templates/article.html%3Fid%3D61"
+  seen finish
+endif
+
+if error_message then
+  finish
+endif

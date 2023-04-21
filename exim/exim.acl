@@ -1,0 +1,100 @@
+# ACL configuration.
+
+acl_check_rcpt:
+
+  accept  hosts = :
+
+  deny    local_parts    = ^.*[@%!/|] : ^\\.
+  accept  local_parts    = postmaster
+          domains        = +local_domains
+
+  warn	  !hosts	 = +relay_from_hosts:${if exists{/etc/exim/exim.rbl.whitelist} {/etc/exim/exim.rbl.whitelist}}
+	  !authenticated = *
+	  message        = X-Warning: $sender_host_address blacklisted at $dnslist_domain.
+          log_message    = Blacklisted at $dnslist_domain.
+          dnslists       = relays.ordb.org : \
+                           bl.spamcop.net : \
+                           dnsbl.njabl.org : \
+			   sbl-xbl.spamhaus.org : \
+			   http.dnsbl.sorbs.net : \
+			   socks.dnsbl.sorbs.net : \
+			   web.dnsbl.sorbs.net : \
+			   misc.dnsbl.sorbs.net : \
+			   rhsbl.sorbs.net : \
+			   list.dsbl.org
+
+  warn    !hosts         = +relay_from_hosts:${if exists{/etc/exim/exim.rbl.whitelist} {/etc/exim/exim.rbl.whitelist}}
+          !authenticated = *
+          message        = X-Redirect-To: JUNKMAIL
+          dnslists       = relays.ordb.org : \
+                           bl.spamcop.net : \
+                           dnsbl.njabl.org : \
+                           sbl-xbl.spamhaus.org : \
+                           http.dnsbl.sorbs.net : \
+                           socks.dnsbl.sorbs.net : \
+                           web.dnsbl.sorbs.net : \
+                           misc.dnsbl.sorbs.net : \
+                           rhsbl.sorbs.net : \
+                           list.dsbl.org
+
+  deny    !hosts         = +relay_from_hosts
+  	  message	 = Rejected: Mail from this address prohibited.
+	  senders	 = ${if exists{/etc/exim/exim.blocked.senders} {lsearch*@;/etc/exim/exim.blocked.senders}}
+
+  accept  domains        = +local_domains
+          endpass
+	  message	 = Rejected: Unknown user.
+          verify         = recipient
+
+  accept  domains        = +relay_to_domains
+          endpass
+	  message	 = Rejected: Unroutable address.
+          verify         = recipient
+
+  accept  hosts          = +relay_from_hosts
+  accept  authenticated  = *
+  deny    message        = Rejected: Relay not permitted.
+
+acl_check_content:
+
+# deny	message = X-Mime-Fail: This message contains a MIME error. ($demime_reason) 
+#       demime  = * 
+#       condition = ${if >{$demime_errorlevel}{2}{1}{0}}
+
+# warn  message = X-Attach-Blacklist: This message contains a blacklisted attachment. (*.$found_extension)
+#	demime  = bat:chm:cmd:com:cpl:hlp:hta:inf:ins:isp:lnk:pif:prf:scr:sct
+
+# warn	message = X-Redirect-To: VIRUMAIL
+#       demime  = bat:chm:cmd:com:cpl:hlp:hta:inf:ins:isp:lnk:pif:prf:scr:sct
+
+# warn  message = X-Clam-Antivirus: Message contains a virus or other harmful content. ($malware_name)
+#	demime	= *
+#	malware = *
+
+# warn  message = X-Redirect-To: VIRUMAIL
+#       demime  = *
+#       malware = *
+
+# warn  !hosts  = +relay_from_hosts
+#       message = X-Spam-Flag: YES
+#       spam = nobody
+
+# warn  !hosts  = +relay_from_hosts
+#	message = X-Spam-Score: $spam_score ($spam_bar)
+#       condition = ${if <{$message_size}{120k}{1}{0}}
+#	spam = nobody
+
+# warn  !hosts  = +relay_from_hosts
+#	message = X-Spam-Report: $spam_report\n\n
+#       condition = ${if <{$message_size}{120k}{1}{0}}
+#	spam = nobody
+
+# warn !hosts  = +relay_from_hosts
+#      message = X-Redirect-To: JUNKMAIL
+#      condition = ${if <{$message_size}{120k}{1}{0}}
+#      condition = ${if >{$spam_score_int}{80}{1}{0}}
+#      spam = nobody
+
+  require verify	= header_syntax
+
+  accept

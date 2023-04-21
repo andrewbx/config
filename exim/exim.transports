@@ -1,0 +1,41 @@
+# Transports configuration.
+
+remote_smtp:
+  driver = smtp
+  dns_qualify_single = false
+
+local_delivery:
+  driver = appendfile
+  file = /var/mail/$local_part
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  group = mail
+  mode = 0660
+  no_mode_fail_narrower
+# quota = ${lookup{$local_part}lsearch*{/etc/exim/exim.quota}{$value}{30M}}
+# quota_is_inclusive = false
+
+system_pipe:
+  driver = pipe
+  user = root
+  return_fail_output
+
+address_pipe:
+  driver = pipe
+  return_output
+
+address_file:
+  driver = appendfile
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+
+address_reply:
+  driver = autoreply
+
+#mail_copy:
+#  driver = appendfile
+#  file = /home/mail/mail/${length_4:$tod_log}/${substr_5_2:$tod_log}/${substr_5_5:$tod_log}.mbox
+#  group = mail
+

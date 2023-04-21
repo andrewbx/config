@@ -1,0 +1,50 @@
+# Routers configuration.
+
+scan_redirect:
+   driver = redirect
+   condition = ${if def:h_X-Redirect-To: {1}{0}}
+   headers_add = X-Original-Recipient: $local_part@$domain
+   data = $h_X-Redirect-To:
+   headers_remove = X-Redirect-To
+   redirect_router = system_aliases
+
+local_relay:
+   driver = dnslookup
+   domains = ! +local_domains
+   transport = remote_smtp
+   ignore_target_hosts = 0.0.0.0 : 127.0.0.0/8
+   no_more
+
+system_aliases:
+   driver = redirect
+   allow_fail
+   allow_defer
+   data = ${lookup{$local_part}lsearch{/etc/mail/aliases.$domain}}
+   file_transport = address_file
+   pipe_transport = address_pipe
+
+userforward:
+   driver = redirect
+   check_local_user
+   file = $home/.forward
+   no_verify
+   no_expn
+   check_ancestor
+   file_transport = address_file
+   pipe_transport = address_pipe
+   reply_transport = address_reply
+
+localuser:
+   driver = accept
+   check_local_user
+   transport = local_delivery
+   cannot_route_message = Rejected: Unknown user.
+
+virtual_aliases:
+   driver = redirect
+   allow_fail
+   allow_defer
+   data = ${lookup{*}lsearch{/etc/mail/aliases.$domain}}
+   file_transport = address_file
+   pipe_transport = address_pipe
+
