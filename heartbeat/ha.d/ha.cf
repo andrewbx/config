@@ -1,0 +1,17 @@
+# /etc/ha.d/ha.cf
+
+logfile /var/log/ha-log
+bcast eth1
+keepalive 2
+warntime 10
+deadtime 30
+initdead 120
+udpport 694
+auto_failback on
+
+node lin-node-01
+node lin-node-02
+
+ping 172.16.1.254
+deadping 60
+respawn cluster /usr/lib/heartbeat/ipfail

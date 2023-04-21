@@ -1,0 +1,2 @@
+lin-node-01 IPaddr::172.16.1.200/24/eth0:1
+lin-node-01 drbddisk::lin-mirror Filesystem::/dev/drbd0::/shared::ext3::rw,noatime,usrquota,grpquota,acl,user_xattr apache2 mysql saslauthd dovecot postfix proftpd webmin usermin named
