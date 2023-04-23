@@ -1,0 +1,11 @@
+$TTL 1W
+@		IN      SOA     ns.localhost. hostmaster.localhost.  (
+				2003121101	; serial
+				28800		; refresh
+				14400		; retry
+				604800		; expiry
+				86400 )		; minimum
+
+@		IN      NS      localhost.
+@		IN	A	127.0.0.1
+@		IN	AAAA	::1
