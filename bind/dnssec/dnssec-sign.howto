@@ -1,0 +1,4 @@
+sudo dnssec-keygen -a ECDSA256 domain.uk
+sudo dnssec-keygen -a ECDSA256 -f KSK -n ZONE domain.uk
+sudo dnssec-signzone -o domain.uk -N INCREMENT -t pri/domain.uk.zone
+sudo tsig-keygen "name"
