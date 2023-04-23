@@ -1,0 +1,139 @@
+server {
+	listen	80;
+	listen	[::]:80;
+
+        root /var/www/www.devnull.co.uk;
+        index index.php index.html;
+
+        error_page 302 301 /302.html;
+
+        location = /302.html {
+		root /var/www/errors;
+		internal;
+        }
+
+	server_name www.devnull.uk devnull.uk;
+        rewrite ^/(.*)$ http://$server_name:443$request_uri permanent;
+}
+
+server {
+	listen	443 ssl;
+	listen	[::]:443 ssl;
+
+	ssl_certificate /etc/letsencrypt/live/devnull.uk/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/devnull.uk/privkey.pem;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:ECDH+AESGCM:ECDH+AES256:DHE:ECDHE:ECDH+AES128:RSA:CAMELLIA:!SEED:!DH+3DES:!ADH:!AECDH:!MD5!aNULL:!eNULL:!EXPORT:!CBC:!RC4:!MD5:!PSK:!TLSv1.1:!TLSv1:!SSLv3;
+
+        ssl_session_timeout 4h;
+        ssl_session_tickets on;
+	ssl_prefer_server_ciphers off;
+	ssl_session_cache shared:SSL:40m;
+	ssl_dhparam /etc/nginx/ssl/dhparam.pem;
+
+        add_header X-Content-Type-Options "nosniff";
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header Content-Security-Policy "frame-ancestors https://*.pri.o2.com";
+	add_header Strict-Transport-Security "max-age=63072000; includeSubDomains";
+	add_header Content-Security-Policy "default-src 'self' data:; script-src 'self' https:; frame-src * data:; img-src * data: blob:; font-src 'self' data:; style-src 'self'; object-src 'self'";
+	add_header Expect-CT "enforce; max-age=3600";
+	add_header Referrer-Policy "strict-origin-when-cross-origin";
+        add_header Feature-Policy "geolocation none;midi none;notifications none;push none;sync-xhr none;microphone none;camera none;magnetometer none;gyroscope none;speaker self;vibrate none;fullscreen self;payment none;";
+
+	ssl_stapling on;
+	ssl_stapling_verify on;
+	ssl_trusted_certificate /etc/letsencrypt/live/devnull.uk/fullchain.pem;
+	resolver_timeout 5s;
+
+	server_name www.devnull.uk devnull.uk;
+	fastcgi_hide_header X-Powered-By;
+
+	access_log /var/log/nginx/www.devnull.uk.access.log;
+	error_log /var/log/nginx/www.devnull.uk.error.log;
+
+	client_max_body_size 1024M;
+	fastcgi_buffers 64 4K;
+
+	root /var/www/www.devnull.uk;
+	index index.php index.html;
+
+        location / {
+                try_files $uri $uri/ /index.php?q=$uri&$args;
+                autoindex on;
+                fancyindex on;
+                fancyindex_exact_size off;
+        }
+
+	location /sourcemod {
+                autoindex on;
+		fancyindex on;
+		fancyindex_exact_size off;
+	}
+
+	location = /favicon.ico {
+		log_not_found off;
+		access_log off;
+	}
+
+	location = /humans.txt {
+		log_not_found off;
+		access_log off;
+	}
+
+        location ~ ^(?<script_name>.+?\.php)(?<path_info>/.*)?$ {
+                try_files $script_name = 404;
+                fastcgi_pass unix:/var/run/php/php-fpm.sock;
+                fastcgi_param PATH_INFO $path_info;
+                fastcgi_param HTTPS on;
+                fastcgi_param PHP_VALUE "upload_max_filesize = 10240M \n post_max_size = 10240M";
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+        }
+
+        location ~ \.cgi$ {
+                fastcgi_intercept_errors on;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_pass unix:/var/run/fcgiwrap.socket;
+        }
+
+	location ~ /\.ht {
+		deny  all;
+	}
+
+        location /pastebin/ {
+		root /var/www/html/pastebin;
+                try_files $uri @rewrite;
+                autoindex on;
+        }
+
+	location @rewrite {
+		rewrite /u:([a-z0-9]+)  /pastebin/pastebin.php?show=$1;
+	}
+
+        error_page 302 301 /302.html;
+	error_page 404 /404.html;
+	error_page 502 /502.html;
+
+        location = /302.html {
+                root /var/www/errors;
+                internal;
+        }
+
+	location = /404.html {
+		root /var/www/errors;
+		internal;
+        }
+
+	location = /502.html {
+		root /var/www/errors;
+		internal;
+	}
+
+        location = /robots.txt {
+                log_not_found off;
+                access_log off;
+        }
+}
