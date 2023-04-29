@@ -1,0 +1,21 @@
+# Procmail.
+
+OPPRIVS=yes
+VERBOSE=ON
+SHELL=/bin/sh
+MAILDIR=$HOME/.maildir
+
+:0fw
+| /usr/bin/clamassassin
+
+:0:
+* ^X-Virus-Status: Yes
+$MAILDIR/.Virus/
+
+:0fw
+* < 256000
+| /usr/bin/spamc -u $LOGNAME
+
+:0:
+* ^X-Spam-Status: Yes
+$MAILDIR/.Junk/
