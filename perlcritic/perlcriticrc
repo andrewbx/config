@@ -1,0 +1,22 @@
+verbose = 8
+
+[-RegularExpressions::RequireExtendedFormatting]
+[-RegularExpressions::RequireDotMatchAnything]
+[-RegularExpressions::RequireLineBoundaryMatching]
+
+[-CodeLayout::RequireTidyCode]
+[-CodeLayout::ProhibitParensWithBuiltins]
+
+[-TestingAndDebugging::ProhibitNoWarnings]
+
+[-NamingConventions::ProhibitAmbiguousNames]
+[-Documentation::RequirePodSections]
+
+[-ValuesAndExpressions::ProhibitImplicitNewlines]
+[-ValuesAndExpressions::ProhibitEmptyQuotes]
+
+[TestingAndDebugging::RequireUseStrict]
+[InputOutput::RequireCheckedSyscalls]
+
+functions = :builtins
+exclude_functions = print
