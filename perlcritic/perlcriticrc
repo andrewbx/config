@@ -14,9 +14,15 @@ verbose = 8
 
 [-ValuesAndExpressions::ProhibitImplicitNewlines]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
+[-ValuesAndExpressions::ProhibitEscapedCharacters]
+
+[-ErrorHandling::RequireCarping]
 
 [TestingAndDebugging::RequireUseStrict]
-[InputOutput::RequireCheckedSyscalls]
 
+[InputOutput::RequireCheckedSyscalls]
 functions = :builtins
-exclude_functions = print
+exclude_functions = print binmode sleep
+
+[Subroutines::ProhibitExcessComplexity]
+max_mccabe = 30
