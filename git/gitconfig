@@ -1,0 +1,26 @@
+[branch]
+autosetuprebase = always
+
+[user]
+email = andrew@devnull.uk
+name = Andrew
+
+[color]
+diff = on
+
+[commit]
+template = ~/Development/github/templates/commit.txt
+requireForce = true
+
+[core]
+editor = vi
+excludesfile = ~/.gitignore
+
+[merge]
+ff = only
+
+[push]
+default = simple
+
+[rebase]
+stat = true

@@ -1,0 +1,27 @@
+[flake8]
+max-line-length = 120
+max-complexity = 10
+hang-closing = True
+doctests = True
+show-source = True
+verbose = 0
+quiet = 0
+ignore =
+    W291,
+    E302,
+    E501,
+    E111,
+    E114,
+    E121,
+    E133
+per-file-ignores =
+    __init__.py:F401,F40
+exclude =
+    .git,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist
+filename =
+    *.py

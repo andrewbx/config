@@ -1,0 +1,12 @@
+# Ignore me.
+.idea
+*.iws
+*.iml
+*.ipr
+.DS_Store
+src/.DS_Store
+Pipfile.lock
+Pipfile
+.terraform.lock.hcl
+.terragrunt-cache
+.pre-commit-config.yaml

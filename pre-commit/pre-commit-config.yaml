@@ -1,0 +1,180 @@
+# pre-commit-config.yaml
+
+# Default actions
+default_stages:
+  - commit
+  - push
+fail_fast: true
+
+repos:
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+  # Hooks for remote repositories
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        args: [
+          '--markdown-linebreak-ext=md'
+        ]
+        exclude: CHANGELOG.md
+      - id: forbid-new-submodules
+      - id: no-commit-to-branch
+      - id: check-yaml
+      - id: check-json
+      - id: check-xml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-vcs-permalinks
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-case-conflict
+      - id: check-symlinks
+      - id: requirements-txt-fixer
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [
+          '--fix=lf'
+        ]
+      - id: name-tests-test
+      - id: detect-aws-credentials
+        args: [
+          '--allow-missing-credentials'
+        ]
+      - id: detect-private-key
+
+  # Hooks for local tools
+  - repo: local
+    hooks:
+
+      # Python static type checker
+      # Install: brew install mypy
+      - id: mypy
+        name: python static type check
+        args: [
+          '--ignore-missing-imports'
+        ]
+        entry: mypy
+        language: system
+        types: [python]
+
+      # Python vulnerability check
+      # Install: brew install bandit
+      - id: bandit
+        name: python vulnerability check
+        args: [
+          '-l',
+          '--recursive',
+          '-x',
+          'tests'
+        ]
+        entry: bandit
+        language: system
+        types: [python]
+        files: .py$
+
+      # Python Linter - PyLint
+      # Install: brew install pylint
+      - id: pylint
+        name: python linter pylint
+        description: Lint python code with pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: [
+          '--disable=missing-docstring,invalid-name,protected-access,too-many-public-methods,no-self-use,unused-import,unused-variable,W0311',
+          '--output-format=text',
+          '--reports=no',
+          '--ignore-mixin-members=yes',
+          '--ignored-classes=_socketobject,ldap,netifaces,sh,brotli',
+          '--generated-members=REQUEST,acl_users,aq_parent,args,cid,client_scripts,tc_kernel_scripts,ie_extras_scripts,workq,numpy.*',
+          '--init-import=no',
+          '--dummy-variables-rgx=_|dummy',
+          '--good-names=i,j,k,ex,Run,_',
+          '--bad-names=foo,bar,baz,toto,tutu,tata',
+          '--no-docstring-rgx=.*',
+          '--max-line-length=120',
+          "--indent-string='   '",
+          '--max-args=10',
+          '--max-locals=15',
+          '--max-returns=3',
+          '--max-branches=10',
+          '--max-statements=50',
+          '--max-parents=7',
+          '--max-attributes=15',
+          '--min-public-methods=1',
+          '--max-public-methods=10',
+          '--deprecated-modules=regsub,TERMIOS,Bastion,rexec',
+          '--defining-attr-methods=__init__,__new__,setUp',
+          '--valid-classmethod-first-arg=cls',
+          '--overgeneral-exceptions=Exception',
+        ]
+
+      # Python Linter - flake8
+      # Install: brew install flake8
+      - id: flake8
+        name: python linter flake8
+        description: Lint python code with flake8
+        entry: flake8
+        args: [
+          '--max-line-length=120',
+          '--max-complexity=10',
+          '--hang-closing',
+          '--doctests',
+          '--show-source',
+          '--ignore=W291,E302,E501,E111,E114,E121,E133',
+          '--per-file-ignores=__init__.py:F401,F40',
+          '--exclude=.git,__pycache__,docs/source/conf.py,old,build,dist',
+          '--filename=*.py'
+        ]
+        language: system
+        types: [python]
+
+      # Python imports sorter
+      # Install: brew install isort
+      - id: isort
+        name: python imports sorter
+        description: Sort imports in python code
+        entry: isort
+        args: [
+            '--recursive',
+            '--line-length=120',
+            '--multi-line=3',
+            '--force-grid-wrap=0',
+            '--trailing-comma',
+            '--use-parentheses',
+            '--ensure-newline-before-comments',
+        ]
+        language: system
+        types: [python]
+
+      # Shellscript code checker
+      # Install: brew install shellcheck
+      - id: shellcheck
+        name: shellscript checker
+        description: Test shell scripts with shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+        require_serial: true
+
+      # Perl code formatter - PerlTidy
+      # Install: cpan install Perl::Tidy
+      - id: perltidy
+        name: perl code formatter
+        description: Cleanup perl formatting
+        entry: perltidy
+        language: system
+        types: [perl]
+
+      # Perl code checker - PerlCritic
+      # Install: cpan install Perl::Critic
+      - id: perlcritic
+        name: perl code checker
+        description: Lint perl code with perlcritic
+        entry: perlcritic
+        language: system
+        types: [perl]

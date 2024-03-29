@@ -1,0 +1,25 @@
+{
+    "outline.collapseItems": "alwaysCollapse",
+
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "gitlens.plusFeatures.enabled": false,
+
+    "editor.fontSize": 13,
+    "window.zoomLevel": 1.3,
+
+    "terminal.explorerKind": "external",
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.inheritEnv": true,
+
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Dracula Soft",
+
+    "explorer.confirmDelete": false,
+    "editor.minimap.enabled": true,
+
+    "[python]": {
+        "editor.formatOnType": true
+    }
+}
