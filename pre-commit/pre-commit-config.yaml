@@ -23,6 +23,10 @@ repos:
         exclude: CHANGELOG.md
       - id: forbid-new-submodules
       - id: no-commit-to-branch
+        args: [
+           '--branch', 'main'
+           '--branch', 'dev'
+        ]
       - id: check-yaml
       - id: check-json
       - id: check-xml
