@@ -10,69 +10,35 @@ enable=quote-safe-variables
 # Require [[ and warn about [ in Bash/Ksh
 enable=require-double-brackets
 
-# https://www.shellcheck.net/wiki/SC2292
-# https://google.github.io/styleguide/shellguide.html#s6.3-tests
-enable=require-double-brackets
-
-# https://www.shellcheck.net/wiki/SC2250
-# https://google.github.io/styleguide/shellguide.html#s5.6-variable-expansion
+# Suggest putting braces around all variable references
 enable=require-variable-braces
 
 # SC1091: Not following <file>
-# https://github.com/koalaman/shellcheck/wiki/SC1091
 disable=SC1091
 
-# SC2039: In POSIX sh, 'local' is undefined.
-# https://github.com/koalaman/shellcheck/wiki/SC2039
+# SC2039: In POSIX sh, 'local' is undefined
 disable=SC2039
 
-# SC2166: Prefer [ p ] || [ q ] as [ p -o q ] is not well defined.
-# https://github.com/koalaman/shellcheck/wiki/SC2166
+# SC2166: Prefer [ p ] || [ q ] as [ p -o q ] is not well defined
 disable=SC2166
 
 # SC2154: Variable is referenced but not assigned
-# https://github.com/koalaman/shellcheck/wiki/SC2154
 disable=SC2154
 
-# SC1091: Not following <file>
-# https://github.com/koalaman/shellcheck/wiki/SC1091
-disable=SC1091
-
-# SC2174: When used with -p, -m only applies to the deepest directory.
-# https://github.com/koalaman/shellcheck/wiki/SC2174
+# When used with -p, -m only applies to the deepest directory
 disable=SC2174
 
-# SC3043: In POSIX sh, 'local' is undefined.
-# https://github.com/koalaman/shellcheck/wiki/SC3043
-# ... but dash supports it
+# In POSIX sh, 'local' is undefined
 disable=SC3043
 
-# SC3013: In POSIX sh, -ef is undefined.
-# https://github.com/koalaman/shellcheck/wiki/SC3013
-# ... but dash supports it
+# In POSIX sh, -ef is undefined
 disable=SC3013
 
-# SC3045: In POSIX sh, read -p is undefined.
-# https://github.com/koalaman/shellcheck/wiki/SC3045
-# ... but dash supports it
+# In POSIX sh, read -p is undefined
 disable=SC3045
 
-# We don't use the `set -e` feature in Bash scripts yet.
-# We do need the return status as condition for if switches.
-# Allow `if command` and `if ! command`.
-disable=SC2310
-
-# We don't use the `set -e` feature in Bash scripts yet.
-# We don't need return codes for "$(command)", only stdout is needed.
-# Allow `var="$(command)"`, etc.
-disable=SC2311
-
-# We don't need return codes for "$(command)", only stdout is needed.
-# Allow `[[ -n "$(command)" ]]`, `func "$(command)"`, pipes, etc.
-disable=SC2312
-
-# SC2086 (info): Double quote to prevent globbing and word splitting.
+# (info): Double quote to prevent globbing and word splitting
 disable=SC2086
 
-# SC2045 (warning): Iterating over ls output is fragile. Use globs.
+# (warning): Iterating over ls output is fragile. Use globs
 disable=SC2045

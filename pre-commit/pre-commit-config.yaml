@@ -1,11 +1,32 @@
 # pre-commit-config.yaml
+# v1.01
+# Note: Tests can be skipped with env SKIP=id
 
-# Default actions
+# Default language and actions
+default_language_version:
+  python: python3
+  perl: perl5.8
+
 default_stages:
   - commit
   - push
+
+default_install_hook_types:
+  - pre-commit
+  - post-commit
+
 fail_fast: true
 
+# Automatic fixing framework https://pre-commit.ci/
+ci:
+  autofix_prs: false
+  autofix_commit_msg: '[pre-commit.ci] automatic fixes'
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit automatic update'
+  autoupdate_schedule: 'weekly'
+  skip: []
+  submodules: false
+
+# Begin pre-commit hook configuration
 repos:
   - repo: meta
     hooks:
@@ -16,39 +37,54 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
+      - id: forbid-new-submodules
+        name: Forbid new submodules
+      - id: no-commit-to-branch
+        name: Don't commit to specific branch
+        args: [
+          '--branch', 'main',
+          '--branch', 'dev'
+        ]
       - id: trailing-whitespace
+        name: Trim trailing whitespace
         args: [
           '--markdown-linebreak-ext=md'
         ]
         exclude: CHANGELOG.md
-      - id: forbid-new-submodules
-      - id: no-commit-to-branch
-        args: [
-           '--branch', 'main'
-           '--branch', 'dev'
-        ]
-      - id: check-yaml
-      - id: check-json
-      - id: check-xml
-      - id: check-added-large-files
-      - id: check-merge-conflict
-      - id: check-vcs-permalinks
-      - id: check-executables-have-shebangs
-      - id: check-shebang-scripts-are-executable
-      - id: check-case-conflict
-      - id: check-symlinks
-      - id: requirements-txt-fixer
       - id: end-of-file-fixer
+        name: Fix EOF with newline
+      - id: check-yaml
+        name: Check yaml file
+      - id: check-json
+        name: Check json file
+      - id: check-xml
+        name: Check xml file
+      - id: check-added-large-files
+        name: Check for large files
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: check-executables-have-shebangs
+        name: Check non-binary executable scripts have shebangs
+      - id: check-shebang-scripts-are-executable
+        name: Check shebang scripts are executable
+      - id: check-case-conflict
+        name: Check case conflict
+      - id: check-symlinks
+        name: Check broken symlinks
+      - id: requirements-txt-fixer
+        name: Sort entries in requirements.txt
       - id: mixed-line-ending
+        name: Check for mixed line endings
         args: [
           '--fix=lf'
         ]
-      - id: name-tests-test
       - id: detect-aws-credentials
+        name: Detect AWS credentials
         args: [
           '--allow-missing-credentials'
         ]
       - id: detect-private-key
+        name: Detect private keys
 
   # Hooks for local tools
   - repo: local
@@ -57,7 +93,7 @@ repos:
       # Python static type checker
       # Install: brew install mypy
       - id: mypy
-        name: python static type check
+        name: Python static type check
         args: [
           '--ignore-missing-imports'
         ]
@@ -68,7 +104,7 @@ repos:
       # Python vulnerability check
       # Install: brew install bandit
       - id: bandit
-        name: python vulnerability check
+        name: Python vulnerability check
         args: [
           '-l',
           '--recursive',
@@ -83,7 +119,7 @@ repos:
       # Python Linter - PyLint
       # Install: brew install pylint
       - id: pylint
-        name: python linter pylint
+        name: Python linter pylint
         description: Lint python code with pylint
         entry: pylint
         language: system
@@ -101,26 +137,18 @@ repos:
           '--bad-names=foo,bar,baz,toto,tutu,tata',
           '--no-docstring-rgx=.*',
           '--max-line-length=120',
-          "--indent-string='   '",
-          '--max-args=10',
-          '--max-locals=15',
-          '--max-returns=3',
-          '--max-branches=10',
-          '--max-statements=50',
-          '--max-parents=7',
-          '--max-attributes=15',
+          "--indent-string='    '",
           '--min-public-methods=1',
-          '--max-public-methods=10',
           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec',
           '--defining-attr-methods=__init__,__new__,setUp',
           '--valid-classmethod-first-arg=cls',
-          '--overgeneral-exceptions=Exception',
+          '--overgeneral-exceptions=Exception'
         ]
 
       # Python Linter - flake8
       # Install: brew install flake8
       - id: flake8
-        name: python linter flake8
+        name: Python linter flake8
         description: Lint python code with flake8
         entry: flake8
         args: [
@@ -129,7 +157,7 @@ repos:
           '--hang-closing',
           '--doctests',
           '--show-source',
-          '--ignore=W291,E302,E501,E111,E114,E121,E133',
+          '--ignore=W291,W503,E111,E114,E121,E133,E203,E266,E302,E402,E501,F401,F403',
           '--per-file-ignores=__init__.py:F401,F40',
           '--exclude=.git,__pycache__,docs/source/conf.py,old,build,dist',
           '--filename=*.py'
@@ -140,17 +168,17 @@ repos:
       # Python imports sorter
       # Install: brew install isort
       - id: isort
-        name: python imports sorter
+        name: Python imports sorter
         description: Sort imports in python code
         entry: isort
         args: [
-            '--recursive',
-            '--line-length=120',
-            '--multi-line=3',
-            '--force-grid-wrap=0',
-            '--trailing-comma',
-            '--use-parentheses',
-            '--ensure-newline-before-comments',
+          '--recursive',
+          '--line-length=120',
+          '--multi-line=3',
+          '--force-grid-wrap=0',
+          '--trailing-comma',
+          '--use-parentheses',
+          '--ensure-newline-before-comments'
         ]
         language: system
         types: [python]
@@ -158,9 +186,41 @@ repos:
       # Shellscript code checker
       # Install: brew install shellcheck
       - id: shellcheck
-        name: shellscript checker
+        name: Shellscript checker
         description: Test shell scripts with shellcheck
         entry: shellcheck
+        args: [
+          # Suggest explicitly using -n in `[ $var ]`
+          '--enable=avoid-nullary-conditions',
+          # Suggest 'command -v' instead of 'which'
+          '--enable=deprecate-which',
+          # Suggest quoting variables without metacharacters
+          '--enable=quote-safe-variables',
+          # Require [[ and warn about [ in Bash/Ksh
+          '--enable=require-double-brackets',
+          # Suggest putting braces around all variable references
+          '--enable=require-variable-braces',
+          # Not following <file>
+          '--exclude=SC1091',
+          # In POSIX sh, 'local' is undefined
+          '--exclude=SC2039',
+          # Prefer [ p ] || [ q ] as [ p -o q ] is not well defined
+          '--exclude=SC2166',
+          # Variable is referenced but not assigned
+          '--exclude=SC2154',
+          # When used with -p, -m only applies to the deepest directory
+          '--exclude=SC2174',
+          # In POSIX sh, 'local' is undefined
+          '--exclude=SC3043',
+          # In POSIX sh, -ef is undefined
+          '--exclude=SC3013',
+          # In POSIX sh, read -p is undefined
+          '--exclude=SC3045',
+          # (info): Double quote to prevent globbing and word splitting
+          '--exclude=SC2086',
+          # (warning): Iterating over ls output is fragile. Use globs
+          '--exclude=SC2045'
+        ]
         language: system
         types: [shell]
         require_serial: true
@@ -168,17 +228,83 @@ repos:
       # Perl code formatter - PerlTidy
       # Install: cpan install Perl::Tidy
       - id: perltidy
-        name: perl code formatter
+        name: Perl code formatter
         description: Cleanup perl formatting
         entry: perltidy
+        args: [
+          # Max line width is 78 columns
+          '-l=78',
+          # Indent level is 4 columns
+          '-i=4',
+          # Continuation indent is 4 columns
+          '-ci=4',
+          # Output to STDOUT
+          #'-st',
+          # Errors to STDERR
+          #'-se',
+          # Maximal vertical tightness
+          '-vt=2',
+          # No extra indentation for closing brackets
+          '-cti=0',
+          # Medium parenthesis tightness
+          '-pt=1',
+          # Medium brace tightness
+          '-bt=1',
+          # Medium square bracket tightness
+          '-sbt=1',
+          # Medium block brace tightness
+          '-bbt=1',
+          # No space before semicolons
+          '-nsfs',
+          # Don't outdent long quoted strings
+          '-nolq',
+          # Break before all operators
+          '-wbb="% + - * / x != == >= <= =~ !~ < > | & >= < = **= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= x="'
+        ]
         language: system
         types: [perl]
 
       # Perl code checker - PerlCritic
       # Install: cpan install Perl::Critic
       - id: perlcritic
-        name: perl code checker
+        name: Perl code checker
         description: Lint perl code with perlcritic
         entry: perlcritic
         language: system
         types: [perl]
+
+      # Dockerfile linter - Hadolint
+      # Install: brew install hadolint
+      - id: hadolint
+        name: Hadolint linter Dockerfile
+        description: Dockerfile linter, validate inline bash
+        entry: hadolint
+        args: [
+          '--ignore', 'DL3027',
+          '--ignore', 'DL3008',
+          '--ignore', 'DL3007',
+          '--ignore', 'DL4006',
+          '--ignore', 'SC1091',
+          '--ignore', 'SC2015',
+          '--ignore', 'SC3037',
+          '--ignore', 'DL3013'
+        ]
+        language: system
+        types: [dockerfile]
+
+      # Terraform inspecter using checkov
+      # Install: brew install checkov
+      - id: terraform_checkov
+        name: Terraform inspection with checkov
+        description: Runs checkov inspection on Terraform templates
+        entry: checkov
+        args: [
+          '--quiet',
+          '--compact',
+          '--framework', 'terraform,secrets',
+          '-f'
+        ]
+        language: system
+        files: \.tf$
+        exclude: \.terraform/.*$
+        require_serial: true

@@ -1,14 +1,28 @@
--l=78 # Max line width is 78 cols
--i=4 # Indent level is 4 cols
--ci=4 # Continuation indent is 4 cols
-#-st # Output to STDOUT
-#-se # Errors to STDERR
--vt=2 # Maximal vertical tightness
--cti=0 # No extra indentation for closing brackets
--pt=1 # Medium parenthesis tightness
--bt=1 # Medium brace tightness
--sbt=1 # Medium square bracket tightness
--bbt=1 # Medium block brace tightness
--nsfs # No space before semicolons
--nolq # Don't outdent long quoted strings
--wbb="% + - * / x != == >= <= =~ !~ < > | & >= < = **= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= x=" # Break before all operators
+# Max line width is 78 columns
+-l=78
+# Indent level is 4 columns
+-i=4
+# Continuation indent is 4 columns
+-ci=4
+# Output to STDOUT
+#-st
+# Errors to STDERR
+#-se
+# Maximal vertical tightness
+-vt=2
+# No extra indentation for closing brackets
+-cti=0
+# Medium parenthesis tightness
+-pt=1
+# Medium brace tightness
+-bt=1
+# Medium square bracket tightness
+-sbt=1
+# Medium block brace tightness
+-bbt=1
+# No space before semicolons
+-nsfs
+# Don't outdent long quoted strings
+-nolq
+# Break before all operators
+-wbb="% + - * / x != == >= <= =~ !~ < > | & >= < = **= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= x="
