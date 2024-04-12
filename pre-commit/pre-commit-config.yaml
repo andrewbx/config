@@ -1,5 +1,5 @@
 # pre-commit-config.yaml
-# v1.01
+# v1.13
 # Note: Tests can be skipped with env SKIP=id
 
 # Default language and actions
@@ -35,7 +35,7 @@ repos:
 
   # Hooks for remote repositories
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: forbid-new-submodules
         name: Forbid new submodules
@@ -45,28 +45,31 @@ repos:
           '--branch', 'main',
           '--branch', 'dev'
         ]
-      - id: trailing-whitespace
-        name: Trim trailing whitespace
-        args: [
-          '--markdown-linebreak-ext=md'
-        ]
-        exclude: CHANGELOG.md
-      - id: end-of-file-fixer
-        name: Fix EOF with newline
       - id: check-yaml
         name: Check yaml file
       - id: check-json
         name: Check json file
       - id: check-xml
         name: Check xml file
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        args: [
+          '--markdown-linebreak-ext=md,markdown'
+        ]
+        exclude: 'CHANGELOG.md|.html|.xml'
+      - id: end-of-file-fixer
+        name: Fix EOF with newline
+        exclude: '.html|.xml'
       - id: check-added-large-files
         name: Check for large files
       - id: check-merge-conflict
         name: Check for merge conflicts
       - id: check-executables-have-shebangs
         name: Check non-binary executable scripts have shebangs
+        exclude_types: [python]
       - id: check-shebang-scripts-are-executable
         name: Check shebang scripts are executable
+        exclude_types: [python]
       - id: check-case-conflict
         name: Check case conflict
       - id: check-symlinks
@@ -78,6 +81,7 @@ repos:
         args: [
           '--fix=lf'
         ]
+        exclude: '.html|.xml'
       - id: detect-aws-credentials
         name: Detect AWS credentials
         args: [
@@ -91,17 +95,21 @@ repos:
     hooks:
 
       # Python static type checker
+      # https://mypy.readthedocs.io/en/stable/config_file.html
       # Install: brew install mypy
       - id: mypy
         name: Python static type check
         args: [
-          '--ignore-missing-imports'
+          '--ignore-missing-imports',
+          '--install-types',
+          '--non-interactive'
         ]
         entry: mypy
         language: system
         types: [python]
 
       # Python vulnerability check
+      # https://bandit.readthedocs.io/en/latest/plugins/index.html#complete-test-plugin-listing
       # Install: brew install bandit
       - id: bandit
         name: Python vulnerability check
@@ -117,6 +125,7 @@ repos:
         files: .py$
 
       # Python Linter - PyLint
+      # https://pylint.readthedocs.io/en/stable/user_guide/messages/messages_overview.html
       # Install: brew install pylint
       - id: pylint
         name: Python linter pylint
@@ -125,27 +134,22 @@ repos:
         language: system
         types: [python]
         args: [
-          '--disable=missing-docstring,invalid-name,protected-access,too-many-public-methods,no-self-use,unused-import,unused-variable,W0311',
+          '--disable=invalid-name,protected-access,too-many-public-methods,E0401',
           '--output-format=text',
           '--reports=no',
           '--ignore-mixin-members=yes',
-          '--ignored-classes=_socketobject,ldap,netifaces,sh,brotli',
-          '--generated-members=REQUEST,acl_users,aq_parent,args,cid,client_scripts,tc_kernel_scripts,ie_extras_scripts,workq,numpy.*',
+          '--ignored-classes=SQLObject,_socketobject,ldap,netifaces,sh,brotli',
+          '--generated-members=REQUEST,acl_users,aq_parent,args',
           '--init-import=no',
-          '--dummy-variables-rgx=_|dummy',
-          '--good-names=i,j,k,ex,Run,_',
-          '--bad-names=foo,bar,baz,toto,tutu,tata',
-          '--no-docstring-rgx=.*',
+          '--good-names=ex,Run,_,f,i,j,k,m,n,__all__,__name__,__version__',
+          '--bad-names=foo,bar,baz,toto,tutu,tata,l,O,I',
+          '--dummy-variables-rgx=_$|dummy_|unused_',
           '--max-line-length=120',
-          "--indent-string='    '",
-          '--min-public-methods=1',
-          '--deprecated-modules=regsub,TERMIOS,Bastion,rexec',
-          '--defining-attr-methods=__init__,__new__,setUp',
-          '--valid-classmethod-first-arg=cls',
-          '--overgeneral-exceptions=Exception'
+          "--indent-string='    '"
         ]
 
       # Python Linter - flake8
+      # https://pep8.readthedocs.io/en/latest/intro.html#error-codes
       # Install: brew install flake8
       - id: flake8
         name: Python linter flake8
@@ -157,7 +161,20 @@ repos:
           '--hang-closing',
           '--doctests',
           '--show-source',
-          '--ignore=W291,W503,E111,E114,E121,E133,E203,E266,E302,E402,E501,F401,F403',
+          # W291: trailing whitespace
+          # W503: line break before binary operator
+          # E111: indentation is not a multiple of four
+          # E114: indentation is not a multiple of four (comment)
+          # E121: continuation line under-indented for hanging indent
+          # E133: closing bracket is missing indentation
+          # E203: whitespace before ‘,’, ‘;’, or ‘:’
+          # E266: too many leading ‘#’ for block comment
+          # E302: expected 2 blank lines, found 0
+          # E402: module level import not at top of file
+          # E501: line too long (82 > 79 characters)
+          # F401: module imported but unused
+          # F403: ‘from module import *’ used; unable to detect undefined names
+          '--ignore=W291,W503,E111,E114,E121,E133,E203,E251,E266,E302,E402,E501,F401,F403',
           '--per-file-ignores=__init__.py:F401,F40',
           '--exclude=.git,__pycache__,docs/source/conf.py,old,build,dist',
           '--filename=*.py'
@@ -172,7 +189,6 @@ repos:
         description: Sort imports in python code
         entry: isort
         args: [
-          '--recursive',
           '--line-length=120',
           '--multi-line=3',
           '--force-grid-wrap=0',
@@ -184,6 +200,7 @@ repos:
         types: [python]
 
       # Shellscript code checker
+      # https://gist.github.com/nicerobot/53cee11ee0abbdc997661e65b348f375
       # Install: brew install shellcheck
       - id: shellcheck
         name: Shellscript checker
@@ -226,6 +243,7 @@ repos:
         require_serial: true
 
       # Perl code formatter - PerlTidy
+      # https://metacpan.org/dist/Perl-Tidy
       # Install: cpan install Perl::Tidy
       - id: perltidy
         name: Perl code formatter
@@ -238,10 +256,6 @@ repos:
           '-i=4',
           # Continuation indent is 4 columns
           '-ci=4',
-          # Output to STDOUT
-          #'-st',
-          # Errors to STDERR
-          #'-se',
           # Maximal vertical tightness
           '-vt=2',
           # No extra indentation for closing brackets
@@ -265,6 +279,7 @@ repos:
         types: [perl]
 
       # Perl code checker - PerlCritic
+      # https://metacpan.org/dist/Perl-Critic
       # Install: cpan install Perl::Critic
       - id: perlcritic
         name: Perl code checker
@@ -274,25 +289,33 @@ repos:
         types: [perl]
 
       # Dockerfile linter - Hadolint
+      # https://github.com/hadolint/hadolint?tab=readme-ov-file#rules
       # Install: brew install hadolint
       - id: hadolint
         name: Hadolint linter Dockerfile
         description: Dockerfile linter, validate inline bash
         entry: hadolint
         args: [
+          # Do not use apt, use apt-get or apt-cache instead
           '--ignore', 'DL3027',
+          # Pin versions in apt-get install
           '--ignore', 'DL3008',
+          # Pin the version explicitly to a release tag
           '--ignore', 'DL3007',
+          # Set the SHELL option -o pipefail before RUN with a pipe in it
           '--ignore', 'DL4006',
-          '--ignore', 'SC1091',
+          # Note that A && B || C is not if-then-else. C may run when A is true
           '--ignore', 'SC2015',
+          # Specify version with zypper install -y <package>[=]<version>
           '--ignore', 'SC3037',
+          # Pin versions in pip
           '--ignore', 'DL3013'
         ]
         language: system
         types: [dockerfile]
 
-      # Terraform inspecter using checkov
+      # Terraform inspector using checkov
+      # https://www.checkov.io/2.Basics/CLI%20Command%20Reference.html
       # Install: brew install checkov
       - id: terraform_checkov
         name: Terraform inspection with checkov

@@ -1,0 +1,11 @@
+bandit
+checkov
+cpanminus
+flake8
+hadolint
+isort
+mypy
+perltidy
+pre-commit
+pylint
+shellcheck
