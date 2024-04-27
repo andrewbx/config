@@ -56,7 +56,7 @@ repos:
         args: [
           '--markdown-linebreak-ext=md,markdown'
         ]
-        exclude: 'CHANGELOG.md|.html|.xml'
+        exclude: 'CHANGELOG.md|.html|.xml|.json'
       - id: end-of-file-fixer
         name: Fix EOF with newline
         exclude: '.html|.xml'
@@ -318,7 +318,7 @@ repos:
       # https://www.checkov.io/2.Basics/CLI%20Command%20Reference.html
       # Install: brew install checkov
       - id: terraform_checkov
-        name: Terraform inspection with checkov
+        name: Terraform inspection
         description: Runs checkov inspection on Terraform templates
         entry: checkov
         args: [
@@ -331,3 +331,17 @@ repos:
         files: \.tf$
         exclude: \.terraform/.*$
         require_serial: true
+
+      # Gitleaks secrets checker
+      # https://github.com/gitleaks/gitleaks
+      # brew install gitleaks
+      - id: gitleaks
+        name: Detect hardcoded secrets
+        description: Detect hardcoded secrets using Gitleaks
+        entry: gitleaks protect
+        args: [
+          '--verbose',
+          '--redact',
+          '--staged'
+        ]
+        language: system
