@@ -1,5 +1,5 @@
 # pre-commit-config.yaml
-# v1.13
+# v1.14
 # Note: Tests can be skipped with env SKIP=id
 
 # Default language and actions
@@ -199,6 +199,25 @@ repos:
         language: system
         types: [python]
 
+      # Python formatter with Ruff
+      # https://docs.astral.sh/ruff/formatter/
+      # Install: brew install ruff
+      - id: ruff
+        name: Python linter ruff
+        description: Python linting with Ruff
+        entry: ruff check --force-exclude
+        language: python
+        types_or: [python, pyi]
+        require_serial: true
+
+      - id: ruff-format
+        name: Python formatter ruff
+        description: Python formatting with Ruff
+        entry: ruff format --force-exclude
+        language: python
+        types_or: [python, pyi]
+        require_serial: true
+
       # Shellscript code checker
       # https://gist.github.com/nicerobot/53cee11ee0abbdc997661e65b348f375
       # Install: brew install shellcheck
@@ -334,7 +353,7 @@ repos:
 
       # Gitleaks secrets checker
       # https://github.com/gitleaks/gitleaks
-      # brew install gitleaks
+      # Install: brew install gitleaks
       - id: gitleaks
         name: Detect hardcoded secrets
         description: Detect hardcoded secrets using Gitleaks
