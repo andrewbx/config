@@ -8,8 +8,8 @@ default_language_version:
   perl: perl5.8
 
 default_stages:
-  - commit
-  - push
+  - pre-commit
+  - pre-push
 
 default_install_hook_types:
   - pre-commit
