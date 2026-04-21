@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://apple.com">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>DNSSettings</key>
+            <dict>
+                <key>DNSProtocol</key>
+                <string>HTTPS</string>
+                <key>ServerAddresses</key>
+                <array>
+                    <string>172.16.16.254</string>
+                    <string>172.16.16.253</string>
+                </array>
+                <key>ServerURL</key>
+                <string>https://doh-dns-one.devnull.uk/dns-query</string>
+            </dict>
+            <key>PayloadDescription</key>
+            <string>Enables system-wide Hosted DNS over HTTPS</string>
+            <key>PayloadDisplayName</key>
+            <string>Hosted DNS (DoH)</string>
+            <key>PayloadIdentifier</key>
+            <string>com.hosted.dns.doh</string>
+            <key>PayloadType</key>
+            <string>com.apple.dnsSettings.managed</string>
+            <key>PayloadUUID</key>
+            <string>2D447B9C-7F63-4D8D-B91F-65C45B9356E1</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>Hosted DNS-ONE Encrypted DNS</string>
+    <key>PayloadIdentifier</key>
+    <string>com.hosted.dns.profile</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>1A2B3C4D-5E6F-7G8H-9I0J-1K2L3M4N5O6P</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>
