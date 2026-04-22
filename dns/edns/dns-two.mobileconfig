@@ -47,7 +47,7 @@
                 <string>HTTPS</string>
 
                 <key>ServerURL</key>
-                <string>https://doh-dns-two.devnull.uk/dns-query</string>
+                <string>https://dns-two.devnull.uk/dns-query</string>
 
             </dict>
 
