@@ -1,0 +1,4 @@
+SocksPort 127.0.0.1:9100
+SocksPolicy accept 127.0.0.1/32
+RunAsDaemon 1
+DataDirectory /var/lib/tor
