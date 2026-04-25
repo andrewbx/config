@@ -19,15 +19,11 @@
           jq
           btop
           htop
-          nmap
-          irssi
           automake
           libtool
           gnupg
           openssl
           pkg-config
-          bind
-          iperf3
           inetutils
           libpsl
           qemu
@@ -35,7 +31,25 @@
           uv
           starship
           zsh
+          bandit
+          checkov
+          hadolint
+          isort
+          pre-commit
+          shellcheck
+          gitleaks
+          mypy
+          pylint
+          ruff
+          perlPackages.PerlTidy
+          perlcritic
         ];
+
+        nativeBuildInputs = with pkgs;
+          let
+            devpython = pkgs.python3.withPackages
+              (packages: with packages; [ virtualenv pip setuptools wheel ]);
+          in [ devpython ];
 
         shellHook = ''
           echo "[x] Nix development shell activated"
