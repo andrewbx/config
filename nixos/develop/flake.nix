@@ -13,6 +13,18 @@
       pkgs = import nixpkgs { inherit system; };
     in
     {
+      # nix shell
+      packages.${system}.default = pkgs.buildEnv {
+        name = "tools";
+        paths = with pkgs; [
+          git
+          curl
+          jq
+          ripgrep
+        ];
+      };
+
+      # nix develop
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           git
