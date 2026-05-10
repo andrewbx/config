@@ -1,0 +1,45 @@
+{ ... }:
+{
+  homebrew = {
+    enable = true;
+
+    onActivation = {
+      autoUpdate = true;
+      upgrade = true;
+      cleanup = "uninstall";
+    };
+
+    global = {
+      brewfile = false;
+    };
+    
+    casks = [
+      "brave-browser"
+      "bitwarden"
+      "ccleaner"
+      "eqmac"
+      "fs-uae-emulator"
+      "fs-uae-launcher"
+      "iterm2"
+      "steam"
+      "synology-drive"
+      "utm"
+      "winbox"
+      "logi-options+"
+      "visual-studio-code"
+    ];
+
+    brews = [
+      "bitwarden-cli"
+      "fs-uae"
+      "gemini-cli"
+      "gnupg"
+      "mise"
+      "openssl@4"
+    ];
+
+    taps = [
+      "cloudflare/cloudflare"
+    ];
+  };
+}
