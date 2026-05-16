@@ -4,7 +4,17 @@
   ...
 }:
 {
-  networking.hostName = "Apple-MacBook-Air";
+  networking.hostName = "macbook-one";
+  networking.search = [ "devnull.uk" ];
+  networking.knownNetworkServices = [
+    "Wi-Fi"
+    "Ethernet"
+    "USB 10/100/1G/2.5G LAN"
+    "USB 10/100/1G LAN"
+    "USB 10/100/1000 LAN"
+    "USB 10/100 LAN"
+    "Thunderbolt Bridge"
+  ];
 
   # Host specific homebrew casks.
   homebrew.casks = [

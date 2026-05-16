@@ -30,11 +30,11 @@
     in
     {
       # $ darwin-rebuild build --flake .#<name>
-      darwinConfigurations."Apple-MacBook-Air" = darwin.lib.darwinSystem {
+      darwinConfigurations."macbook-one" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ./darwin
-          ./hosts/Apple-MacBook-Air/configuration.nix
+          ./hosts/macbook-one/configuration.nix
         ];
         specialArgs = { inherit inputs self primaryUser; };
       };
