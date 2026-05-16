@@ -2,6 +2,9 @@
 {
   home = {
     packages = with pkgs; [
+      irssi
+      eza
+      vivid
       vim
       git
       btop
@@ -17,6 +20,7 @@
       nerd-fonts.fira-mono
       nerd-fonts.jetbrains-mono
       nerd-fonts.hack
+      zstd
     ];
   };
 }

@@ -19,5 +19,11 @@ _: {
         "rust"
       ];
     };
+    shellAliases = {
+      ls = "eza --group-directories-first --icons=auto";
+      ll = "eza -lh --group-directories-first --icons=auto --git";
+      la = "eza -lah --group-directories-first --icons=auto";
+      lt = "eza --tree --level=2 --group-directories-first --icons=auto";
+    };
   };
 }

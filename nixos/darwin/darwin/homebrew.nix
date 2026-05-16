@@ -4,7 +4,7 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = true;
+      autoUpdate = false;
       upgrade = true;
       cleanup = "uninstall";
     };
@@ -14,6 +14,7 @@
     };
     
     casks = [
+      "balenaetcher"
       "brave-browser"
       "bitwarden"
       "ccleaner"
