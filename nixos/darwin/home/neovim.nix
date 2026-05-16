@@ -11,11 +11,6 @@
     withRuby = false;
     withPython3 = true;
     
-    extraConfig = ''
-      :imap jk <Esc>
-      :set number
-    '';
-
     initLua = ''
       -- Start in Insert Mode automatically
       vim.cmd([[autocmd VimEnter * startinsert]])
@@ -73,15 +68,8 @@
       vim.g.gruvbox_background = "hard"
       vim.cmd.colorscheme('gruvbox')
       vim.api.nvim_set_hl(0, "Normal", { bg = "#0f1118" })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#0f1118" })
       
-      local ok, ts = pcall(require, 'nvim-treesitter.configs')
-      if ok then
-        ts.setup {
-          highlight = { enable = true },
-          indent = { enable = true },
-        }
-      end
-
       require('telescope').setup {}
       require('lualine').setup {
         options = {
@@ -94,7 +82,15 @@
       require('oil').setup()
 
       local cmp = require('cmp')
+      local luasnip = require('luasnip')
+
       cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+
         mapping = cmp.mapping.preset.insert({
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<CR>'] = cmp.mapping.confirm({ select = true }),
@@ -102,6 +98,7 @@
 
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
+          { name = 'luasnip' },
         }),
       })
 
@@ -121,6 +118,17 @@
         'lua_ls',
       })
 
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local opts = { buffer = args.buf }
+
+          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+          vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+          vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+          vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+        end,
+      })
+
       vim.diagnostic.config({
         virtual_text = true,
         signs = true,
@@ -137,12 +145,10 @@
       nixd
       alejandra
       lua-language-server
-      tree-sitter
     ];
 
     # Neovim plugins.
     plugins = with pkgs.vimPlugins; [
-      ctrlp-vim
       oil-nvim
       telescope-nvim
       plenary-nvim
