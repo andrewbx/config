@@ -34,6 +34,7 @@
       gc-dates = "daily";
       gc-keep-outputs = false;
       gc-keep-derivations = false;
+      auto-optimise-store = true;
     };
 
     extraOptions = ''

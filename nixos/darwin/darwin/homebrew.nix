@@ -27,7 +27,7 @@
       "utm"
       "winbox"
       "logi-options+"
-      "visual-studio-code"
+      "vscodium"
     ];
 
     brews = [
