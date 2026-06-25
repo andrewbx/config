@@ -26,6 +26,7 @@
       "synology-drive"
       "utm"
       "winbox"
+      "wireshark-app"
       "logi-options+"
       "vscodium"
     ];

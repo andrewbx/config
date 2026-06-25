@@ -9,6 +9,7 @@
       git
       btop
       htop
+      qrencode
       jq
       wget
       gnupg
@@ -16,10 +17,13 @@
       ripgrep
       curl
       oh-my-zsh
+      tshark
+      mtr
       nerd-fonts.fira-code
       nerd-fonts.fira-mono
       nerd-fonts.jetbrains-mono
       nerd-fonts.hack
+      nmap
       zstd
     ];
   };
