@@ -6,6 +6,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./filesystem.nix
       ./network.nix
       ./security-os.nix
       ./security-tools.nix
@@ -32,6 +33,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.tmp.useTmpfs = true;
+  boot.kernelModules = [ "kvm-intel" ];
 
   # Blacklist kernel modules.
   boot.blacklistedKernelModules = [ "snd_hda_intel" "btusb" "bluetooth" ];

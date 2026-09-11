@@ -10,14 +10,12 @@
 
   boot.initrd.availableKernelModules = [ "ohci_pci" "ehci_pci" "ahci" "firewire_ohci" "usb_storage" "usbhid" "sd_mod" "sr_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   # Filesystem options.
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/16bafbd2-d157-440a-b530-cc96b3f86c79";
     fsType = "ext4";
-    options = [ "noatime" ];
   };
 
   fileSystems."/boot" = {
@@ -29,9 +27,6 @@
   swapDevices =
     [ { device = "/dev/disk/by-uuid/ffde15a8-b3fb-438d-878e-cf8fa124be00"; }
     ];
-
-  # Activate swapfile.
-  # swapDevices = [ { device = "/swapfile"; size = 2048; } ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

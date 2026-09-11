@@ -6,6 +6,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./filesystem.nix
       ./network.nix
       ./security-os.nix
       ./security-tools.nix
