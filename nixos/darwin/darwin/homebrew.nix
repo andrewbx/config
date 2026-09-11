@@ -21,6 +21,7 @@
       "eqmac"
       "fs-uae-emulator"
       "fs-uae-launcher"
+      "grok-build"
       "iterm2"
       "steam"
       "synology-drive"
@@ -32,12 +33,19 @@
     ];
 
     brews = [
+      "ancient"
       "bitwarden-cli"
+      "container"
+      "e2fsprogs"
       "fs-uae"
-      "gemini-cli"
       "gnupg"
+      "lhasa"
       "mise"
       "openssl@4"
+      "sdl3"
+      "sdl2-compat"
+      "sevenzip"
+      "uade"
     ];
 
     taps = [

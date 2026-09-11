@@ -9,6 +9,7 @@
       git
       btop
       htop
+      inetutils
       qrencode
       jq
       wget
