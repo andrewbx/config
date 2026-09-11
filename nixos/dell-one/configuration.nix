@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./network.nix
       ./security-os.nix
       ./security-tools.nix
       ./virtualisation.nix
@@ -75,28 +76,6 @@
   hardware.enableAllFirmware = true;
   hardware.wirelessRegulatoryDatabase = true;
   hardware.usb-modeswitch.enable = true;
-
-  # Enable networking.
-  networking = {
-    networkmanager = {
-      enable = true;
-      settings = {
-        device = {
-          "wifi.scan-rand-mac-address" = "no";
-        };
-        connection = {
-          "wifi.cloned-mac-address" = "permanent";
-        };
-      };
-    };
-
-    hostName = "dell-one";
-    domain = "devnull.uk";
-  };
-
-  # systemd resolver.
-  services.resolved.enable = false;
-  networking.resolvconf.enable = true;
 
   # systemd journald.
   services.journald.extraConfig = ''
@@ -179,7 +158,7 @@
   users.users."andrew" = {
     isNormalUser = true;
     description = "Andrew";
-    extraGroups = [ "networkmanager" "wheel" "storage" ];
+    extraGroups = [ "networkmanager" "wheel" "storage" "disk" ];
     packages = with pkgs; [
       #
     ];
