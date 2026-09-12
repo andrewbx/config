@@ -130,6 +130,9 @@
     subpixel.rgba = "none";
   };
 
+  # Enable fontDir
+  fonts.fontDir.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -200,11 +203,11 @@
     dnsutils
     eza
     vivid
-    nerd-fonts.jetbrains-mono
     git
     htop
     hdparm
     jq
+    jetbrains-mono
     (lib.hiPrio pkgs.nettools)
     unzip
     vim
