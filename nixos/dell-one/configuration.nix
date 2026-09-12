@@ -16,6 +16,7 @@
       ./nvidia.nix
       ./amiga.nix
       ./gnome.nix
+      ./office.nix
     ];
 
   # Nix Settings.
@@ -122,6 +123,18 @@
   # Configure console keymap
   console.keyMap = "uk";
 
+  # Font configuration
+  fonts.fontconfig = {
+    antialias = true;
+
+    hinting = {
+      enable = true;
+      style = "slight";
+    };
+
+    subpixel.rgba = "none";
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -210,14 +223,10 @@
     alsa-utils
     pulseaudio
     wireplumber
-    ntfs3g
-    exfatprogs
     vscodium
     neovim
-    file
     inetutils
     pciutils
-    udftools
     gparted
     python3
     python3Packages.pip
@@ -303,36 +312,6 @@
     memoryPercent = 25;
   };
   documentation.nixos.enable = false;
-
-  # Actually load the drivers
-  boot.kernelModules = [ "udf" "isofs" ];
-  boot.initrd.availableKernelModules = [ "udf" "isofs" ];
-
-  # Enable kernel support for NTFS, FAT32 and UDF
-  boot.supportedFilesystems = [ "udf" "iso9660" "ntfs" "vfat" ];
-
-  # Enable disk automounting daemons
-  security.polkit.enable = true;
-  services.udisks2.enable = true;
-  services.gvfs.enable = true;
-
-  security.polkit.extraConfig = ''
-    polkit.addRule(function(action, subject) {
-      if (action.id == "org.freedesktop.udisks2.filesystem-mount-system" &&
-          subject.isInGroup("wheel") &&
-          subject.active &&
-          subject.local) {
-        return polkit.Result.YES;
-      }
-    });
-  '';
-
-  # Default NTFS mount options for user mounts
-  environment.etc."udisks2/mount_options.conf".text = ''
-    [defaults]
-    ntfs_defaults=uid=$UID,gid=$GID,windows_names
-    ntfs_allow=uid=$UID,gid=$GID,umask,dmask,fmask,windows_names,nls,exec
-  '';
 
   nix.settings.trusted-users = [ "root" "andrew" ];
 

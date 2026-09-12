@@ -31,6 +31,8 @@
   programs.dconf.enable = true;
 
   environment.systemPackages = with pkgs; [
+    gnomeExtensions.just-perfection
+    gnomeExtensions.appindicator
     gnomeExtensions.no-overview
     gnomeExtensions.dash-to-dock
   ];

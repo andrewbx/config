@@ -22,4 +22,9 @@
 
   # systemd resolver.
   services.resolved.enable = false;
+
+  programs.winbox = {
+    enable = true;
+    openFirewall = true;
+  };
 }

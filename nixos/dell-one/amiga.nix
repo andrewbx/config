@@ -5,6 +5,18 @@ let
   group = "users";
   home = "/home/${user}";
 
+  audacious-gtk3 = pkgs.symlinkJoin {
+    name = "audacious-gtk3";
+    paths = [ pkgs.audacious ];
+
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+
+    postBuild = ''
+      wrapProgram $out/bin/audacious \
+        --prefix XDG_DATA_DIRS : "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+    '';
+  };
+
   amitools = pkgs.python3Packages.buildPythonPackage rec {
     pname = "amitools";
     version = "0.8.1";
@@ -78,6 +90,7 @@ in
     uade
     libao
     amitools
+    audacious-gtk3
   ];
 
   # Enable kernel support for FFS
