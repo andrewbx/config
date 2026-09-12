@@ -134,6 +134,7 @@
 
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
+    lm_sensors
     iotop
     sqlite
     bat
