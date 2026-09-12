@@ -85,13 +85,8 @@
   '';
 
   systemd.services.systemd-udev-settle.enable = false;
-  systemd.targets.network-online.enable = true;
-  systemd.services.NetworkManager-wait-online.enable = true;
-
-  systemd.services.display-manager = {
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-  };
+  systemd.targets.network-online.enable = false;
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   # Set your time zone.
   time.timeZone = "Europe/London";
