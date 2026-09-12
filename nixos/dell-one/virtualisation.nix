@@ -25,6 +25,7 @@
   };
 
   programs.virt-manager.enable = true;
+  virtualisation.podman.enable = true;
 
   virtualisation.libvirtd.allowedBridges = [
     "virbr0"

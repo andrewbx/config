@@ -221,6 +221,11 @@
     gparted
     python3
     python3Packages.pip
+    lm_sensors
+    nvme-cli
+    lsof
+    ethtool
+    dmidecode
   ];
 
   # Z-Shell configuration.
