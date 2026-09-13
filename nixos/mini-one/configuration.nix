@@ -11,6 +11,7 @@
       ./security-os.nix
       ./security-tools.nix
       ./technitium.nix
+      ./virtualisation.nix
     ];
 
   # Nix Settings.
@@ -33,7 +34,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.tmp.useTmpfs = true;
-  boot.kernelModules = [ "kvm-intel" ];
 
   # Blacklist kernel modules.
   boot.blacklistedKernelModules = [ "snd_hda_intel" "btusb" "bluetooth" ];

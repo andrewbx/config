@@ -43,7 +43,6 @@
 
   environment.systemPackages = with pkgs; [
     qemu_kvm
-    virt-manager
     libguestfs
     OVMF
   ];
