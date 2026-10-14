@@ -30,6 +30,7 @@
       "wireshark-app"
       "logi-options+"
       "vscodium"
+      "onlyoffice"
     ];
 
     brews = [
