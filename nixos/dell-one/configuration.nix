@@ -8,16 +8,26 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./filesystem.nix
-      ./network.nix
-      ./security-os.nix
-      ./security-tools.nix
-      ./virtualisation.nix
-      ./shell.nix
-      ./nvidia.nix
-      ./amiga.nix
-      ./gnome.nix
-      ./office.nix
+      ./common.nix
+      ./filesystem/filesystem.nix
+      ./networking/network.nix
+      ./security/security-os.nix
+      ./security/security-tools.nix
+      ./virtualisation/virtualisation.nix
+      ./containers/containers.nix
+      ./console/shell.nix
+      ./hardware/nvidia.nix
+      ./gui/gnome.nix
+      ./applications/amiga.nix
+      ./applications/office.nix
+      ./applications/steam.nix
+      ./applications/cdrtools.nix
+      ./applications/vice.nix
+      ./applications/zx.nix
+      ./applications/mame.nix
+      ./applications/romvault.nix
+      ./applications/srcds.nix
+      ./applications/sourcemod.nix
     ];
 
   # Nix Settings.
@@ -37,8 +47,8 @@
   boot = {
     loader.grub = {
       enable = true;
-      device = "/dev/sdb"; 
-      useOSProber = true;
+      device = "/dev/sda"; 
+      useOSProber = false;
       splashImage = null;
       backgroundColor = null;
 
@@ -67,7 +77,6 @@
   };
 
   boot.tmp.useTmpfs = true;
-  boot.kernelPackages = pkgs.linuxPackages_7_2;
 
   boot.extraModprobeConfig = ''
     options cfg80211 ieee80211_regdom=GB
@@ -170,8 +179,9 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."andrew" = {
     isNormalUser = true;
+    uid = 1027;
     description = "Andrew";
-    extraGroups = [ "networkmanager" "wheel" "storage" "disk" ];
+    extraGroups = [ "networkmanager" "wheel" "storage" "disk" "cdrom" ];
     packages = with pkgs; [
       #
     ];
@@ -187,21 +197,15 @@
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     iw
-    iperf
     vim
-    wget
-    brave
     usbutils
     bitwarden-desktop
     bitwarden-cli
     iotop
     sqlite
     bat
-    irssi
     screen
     btop
-    curl
-    dnsutils
     eza
     vivid
     git
@@ -209,21 +213,20 @@
     hdparm
     jq
     jetbrains-mono
-    (lib.hiPrio pkgs.nettools)
+    fastfetch
+    file-roller
+    _7zz
+    zip
     unzip
     vim
-    wget
-    iperf3
     smartmontools
     ddrescue
     pavucontrol
-    qpwgraph
     alsa-utils
     pulseaudio
     wireplumber
     vscodium
     neovim
-    inetutils
     pciutils
     gparted
     python3
@@ -231,8 +234,8 @@
     lm_sensors
     nvme-cli
     lsof
-    ethtool
     dmidecode
+    inxi
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -273,5 +276,4 @@
 
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "26.05"; # Did you read the comment?
-
 }

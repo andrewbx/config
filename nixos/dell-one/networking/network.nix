@@ -27,4 +27,19 @@
     enable = true;
     openFirewall = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    brave
+    net-snmp
+    inetutils
+    dnsutils
+    ethtool
+    iperf3
+    wget
+    curl
+    irssi
+    filezilla
+    (lib.hiPrio pkgs.nettools)
+  ];
 }
+

@@ -5,7 +5,7 @@ let
     pname = "microsoft-office-fonts";
     version = "1.0";
 
-    src = ./fonts;
+    src = /etc/nixos/fonts;
 
     installPhase = ''
       install -Dm644 calibril.ttf \

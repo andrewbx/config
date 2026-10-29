@@ -31,11 +31,24 @@
   programs.dconf.enable = true;
 
   environment.systemPackages = with pkgs; [
+    gtk3
     gnomeExtensions.just-perfection
     gnomeExtensions.appindicator
     gnomeExtensions.no-overview
     gnomeExtensions.dash-to-dock
   ];
+
+  environment.sessionVariables.XDG_DATA_DIRS = lib.mkAfter [
+    "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
+    "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+  ];
+
+  security.wrappers.cdrecord = {
+    source = "${pkgs.cdrtools}/bin/cdrecord";
+    owner = "root";
+    group = "cdrom";
+    capabilities = "cap_dac_read_search,cap_dac_override,cap_sys_rawio,cap_ipc_lock,cap_net_raw,cap_sys_nice+ep";
+  };
 
   programs.dconf.profiles.user.databases = [
     {

@@ -5,5 +5,7 @@
     nmap
     lynis
     aircrack-ng
+    tcpdump
+    tshark
   ];
 }

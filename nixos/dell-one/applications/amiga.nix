@@ -1,9 +1,11 @@
 { config, pkgs, lib, ... }:
 
 let
-  user = "andrew";
-  group = "users";
+  user = config.myConfig.user;
+  group = config.myConfig.group;
   home = "/home/${user}";
+  work = config.myConfig.work;
+  amigaDir = "${work}/Retro/Amiga";
 
   audacious-gtk3 = pkgs.symlinkJoin {
     name = "audacious-gtk3";
@@ -86,6 +88,7 @@ in
   environment.systemPackages = with pkgs; [
     fsuae
     fsuaeLauncher
+    lhafile
     lhasa
     uade
     libao
@@ -97,16 +100,16 @@ in
   boot.supportedFilesystems = [ "affs" ];
 
   systemd.tmpfiles.rules = [
-    "d /work/Amiga 0755 ${user} ${group} -"
-    "d /work/Amiga/Setup 0775 ${user} ${group} -"
-    "d /work/Amiga/Emulators 0775 ${user} ${group} -"
-    "d /work/Amiga/Emulators/FS-UAE 0775 ${user} ${group} -"
-    "d /work/Amiga/Modules 0775 ${user} ${group} -"
-    "d /work/Amiga/Library 0775 ${user} ${group} -"
-    "d /work/Amiga/Backup 0775 ${user} ${group} -"
-    "d /work/Amiga/Dev 0775 ${user} ${group} -"
+    "d ${amigaDir} 0755 ${user} ${group} -"
+    "d ${amigaDir}/Setup 0775 ${user} ${group} -"
+    "d ${amigaDir}/Emulators 0775 ${user} ${group} -"
+    "d ${amigaDir}/Emulators/FS-UAE 0755 ${user} ${group} -"
+    "d ${amigaDir}/Modules 0755 ${user} ${group} -"
+    "d ${amigaDir}/Library 0755 ${user} ${group} -"
+    "d ${amigaDir}/Backup 0755 ${user} ${group} -"
+    "d ${amigaDir}/Dev 0755 ${user} ${group} -"
 
     # FS-UAE default directory -> Amiga FS-UAE directory
-    "L+ ${home}/Documents/FS-UAE - - - - /work/Amiga/Emulators/FS-UAE"
+    "L+ ${home}/Documents/FS-UAE - - - - ${amigaDir}/Emulators/FS-UAE"
   ];
 }

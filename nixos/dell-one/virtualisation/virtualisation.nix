@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
 
+let
+  user = config.myConfig.user;
+  group = config.myConfig.group;
+  work = config.myConfig.work;
+in
 {
   hardware.graphics = {
     enable = true;
@@ -21,7 +26,6 @@
   };
 
   programs.virt-manager.enable = true;
-  virtualisation.docker.enable = true;
 
   virtualisation.libvirtd.allowedBridges = [
     "virbr0"
@@ -30,16 +34,13 @@
   virtualisation.spiceUSBRedirection.enable = true;
 
   systemd.tmpfiles.rules = [
-    "d /work/VM 0775 root users -"
+    "d ${work}/VM 0755 ${user} ${group} -"
   ];
 
   boot.kernelParams = [
-    "intel_iommu=on"
-    "iommu=pt"
-    "mitigations=off"
+    # "intel_iommu=on"
+    # "iommu=pt"
   ];
-
-  boot.kernel.sysctl."vm.nr_hugepages" = 4096;
 
   environment.systemPackages = with pkgs; [
     qemu_kvm
