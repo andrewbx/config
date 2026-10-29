@@ -6,26 +6,39 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./filesystem.nix
-      ./network.nix
-      ./security-os.nix
-      ./security-tools.nix
-      ./technitium.nix
+      ./common.nix
+      ./filesystem/filesystem.nix
+      ./networking/network.nix
+      ./networking/snmp.nix
+      ./security/security-os.nix
+      ./security/security-tools.nix
+      ./console/shell.nix
+      ./applications/technitium.nix
+#     ./virtualisation/virtualisation.nix
+#     ./containers/containers.nix
     ];
 
   # Nix Settings.
   nix.settings = {
     auto-optimise-store = true;
     experimental-features = [ "nix-command" "flakes" ];
-    max-jobs = 2;
-    cores = 2;
+    builders-use-substitutes = true;
+    max-jobs = 0;
+    max-substitution-jobs = 2;
+    cores = 1;
+  };
+
+  # Lower the priority for Nix Daemon.
+  systemd.services.nix-daemon.serviceConfig = {
+    Nice = 10;
+    memoryHigh = "700M";
   };
 
   # Generation history.
   nix.gc = {
     automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than +10";
+    dates = "daily";
+    options = "--delete-older-than 5d";
   };
 
   # Boot.
@@ -34,11 +47,9 @@
   boot.loader.generic-extlinux-compatible.enable = true;
   boot.kernelPackages = pkgs.linuxPackages;
   boot.kernelParams = [
-    "cma=256M"
-    "video=off"
-    "gpu_mem=16"
+    "cma=16M"
+    "reboot=w"
     "brcmfmac.feature_disable=0"
-    "dtoverlay=disable-wifi"
   ];
   boot.tmp.useTmpfs = true;
 
@@ -140,8 +151,6 @@
     bat
     screen
     btop
-    curl
-    dnsutils
     eza
     vivid
     nerd-fonts.jetbrains-mono
@@ -149,61 +158,12 @@
     htop
     hdparm
     jq
-    (lib.hiPrio pkgs.nettools)
+    zip
     unzip
     vim
-    wget
-    zsh
-    iperf3
     smartmontools
+    inxi
   ];
-
-  # Z-Shell configuration.
-  programs.zsh = {
-    enable = true;
-    enableLsColors = true;
-    autosuggestions.enable = true;
-    zsh-autoenv.enable = true;
-    syntaxHighlighting.enable = true;
-    ohMyZsh = {
-      enable = true;
-      theme = "gianu";
-      plugins = [
-        "git"
-        "sudo"
-        "docker"
-        "kubectl"
-        "npm"
-        "node"
-        "history"
-        "rust"
-      ];
-    };
-    shellAliases = {
-      ls = "eza --group --group-directories-first --icons=auto";
-      ll = "eza -lh --group --group-directories-first --icons=auto --git";
-      la = "eza -lah --group --group-directories-first --icons=auto";
-      lt = "eza --tree --level=2 --group --group-directories-first --icons=auto";
-    };
-  };
-
-  # Bash shell configuration.
-  programs.bash.shellAliases = {
-    ls = "eza --group --group-directories-first --icons=auto";
-    ll = "eza -lh --group --group-directories-first --icons=auto --git";
-    la = "eza -lah --group --group-directories-first --icons=auto";
-    lt = "eza --tree --level=2 --group --group-directories-first --icons=auto";
-  };
-
-  # Add zsh to /etc/shells so it's recognized.
-  environment.shells = with pkgs; [ zsh ];
-  environment.interactiveShellInit = ''
-    export EZA_COLORS="da=38;5;245:uu=38;5;245:gu=38;5;245";
-    export LS_COLORS="$(vivid generate nord)"
-  '';
-
-  # Set Zsh as default user shell.
-  users.defaultUserShell = pkgs.zsh;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -230,9 +190,10 @@
   zramSwap = {
     enable = true;
     algorithm = "lz4";
-    memoryPercent = 25;
+    memoryPercent = 100;
   };
   documentation.nixos.enable = false;
+  systemd.services.sshd.serviceConfig.ManagedOOMPreference = "avoid";
 
   nix.settings.trusted-users = [ "root" "rpi-admin" ];
 
@@ -244,14 +205,9 @@
   # Setup rsyslog and forward to log server.
   services.rsyslogd.enable = true;
   services.rsyslogd.extraConfig = ''
-    module(load="imfile")
-    module(load="imuxsock")
-    module(load="imjournal" StateFile="imjournal.state")
-    module(load="omfwd")
-
     *.* action(
       type="omfwd"
-      target="172.16.16.10"
+      target="172.16.16.253"
       port="514"
       protocol="udp"
       action.resumeRetryCount="100"
@@ -266,12 +222,31 @@
   # Auto Update and Reboot.
   system.autoUpgrade = {
     enable = true;
-    allowReboot = true;
-    dates = "04:30";
+    allowReboot = false;
+    operation = "switch";
+    dates = "Sun 04:00";
     rebootWindow = {
       lower = "04:00";
       upper = "05:00";
     };
     flake = null;
   };
+
+  # Handoff build tasks to a remote builder
+  nix = {
+    distributedBuilds = true;
+
+    buildMachines = [
+      {
+        system = "aarch64-linux";
+        sshUser = "build";
+        sshKey = "/root/.ssh/nix-build";
+        maxJobs = 1;
+        protocol = "ssh-ng";
+        hostName = "mini-one.devnull.uk";
+        supportedFeatures = [ ];
+      }
+    ];
+  };
 }
+

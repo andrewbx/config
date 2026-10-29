@@ -150,4 +150,12 @@
     nameserver 1.1.1.1
     nameserver 1.0.0.1
   '';
+
+  environment.systemPackages = with pkgs; [
+    curl
+    dnsutils
+    (lib.hiPrio pkgs.nettools)
+    wget
+    iperf3
+  ];
 }

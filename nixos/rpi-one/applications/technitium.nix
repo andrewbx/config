@@ -3,14 +3,14 @@
   # Technitium DNS.
   services.technitium-dns-server = {
     enable = true;
-    package = pkgs.runCommand "technitium-dns-server-15.4" {
+    package = pkgs.runCommand "technitium-dns-server-15.6" {
       nativeBuildInputs = [ pkgs.makeWrapper ];
     } ''
       mkdir -p $out/lib/technitium-dns-server $out/bin
 
       ${pkgs.gnutar}/bin/tar -xzvf ${pkgs.fetchurl {
         url = "https://download.technitium.com/dns/DnsServerPortable.tar.gz";
-        hash = "sha256-RhrAnUMErOhQk/wXsQp+4TqHlurgrbQ5OGa9TWarKD8=";
+        hash = "sha256-ko8f4oJBOVpvUnqi8ZISk7ePy1tp5+fHT4iardhQVfM=";
       }} -C $out/lib/technitium-dns-server
 
     makeWrapper ${pkgs.dotnetCorePackages.aspnetcore_10_0}/bin/dotnet $out/bin/technitium-dns-server \
@@ -72,6 +72,7 @@
   };
 
   services.rsyslogd.extraConfig = ''
+    module(load="imfile")
     input(
       type="imfile"
       File="/var/lib/technitium-dns/logs/*.log"
